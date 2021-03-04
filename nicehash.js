@@ -147,7 +147,7 @@ class NiceHashClient {
    *  - This is a public API endpoint
    */
   getExchangeRates() {
-    return this.getUnsignedRequestPromise('GET', '/main/api/v2/exchangeRate/list', {});
+    return this.getUnsignedRequestPromise('GET', '/exchange/api/v2/info/prices', {});
   }
 }
 

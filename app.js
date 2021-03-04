@@ -52,6 +52,10 @@ const totalBtc = new Gauge({
   name: prefix +'total_btc',
   help: 'totalBtc',
 });
+const btcUsdRate = new Gauge({
+  name: prefix +'btc_usd_rate',
+  help: 'btcUsdRate',
+});
 const minerStatuses = new Gauge({
   name: prefix +'miner_statuses',
   help: 'minerStatuses',
@@ -106,6 +110,9 @@ async function refreshMetrics() {
   const data = rawResponse.data
   //console.log(data)
   deviceStatusInfo.reset()
+  minerStatuses.reset()
+  devicesStatuses.reset()
+
   totalRigs.set(data.totalRigs)
   totalDevices.set(data.totalDevices)
   totalProfitability.set(data.totalProfitability)
@@ -132,6 +139,11 @@ async function refreshMetrics() {
   //console.log(data2)
   totalBtc.set(+data2.totalBalance)
   //fiatRate.set(data2.totalBalance)
+
+  const rawResponse3 = await nhClient.getExchangeRates()
+  const data3 = rawResponse3.data
+  //console.log(data3)
+  btcUsdRate.set(+data3['BTCUSDC'])
 }
 
 
