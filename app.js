@@ -106,44 +106,62 @@ const deviceStatusInfo = new Gauge({
 });
 
 async function refreshMetrics() {
-  const rawResponse = await nhClient.getMiningRigs()
-  const data = rawResponse.data
-  //console.log(data)
   deviceStatusInfo.reset()
   minerStatuses.reset()
   devicesStatuses.reset()
+  try {
+    const rawResponse = await nhClient.getMiningRigs()
+    const data = rawResponse.data
+    //console.log(data)
 
-  totalRigs.set(data.totalRigs)
-  totalDevices.set(data.totalDevices)
-  totalProfitability.set(data.totalProfitability)
-  unpaidAmount.set(+data.unpaidAmount)
-  Object.keys(data.minerStatuses).forEach(k => minerStatuses.labels(k).set(data.minerStatuses[k]))
-  Object.keys(data.devicesStatuses).forEach(k => devicesStatuses.labels(k).set(data.devicesStatuses[k]))
-  data.miningRigs.forEach(rig => {
-    rigStatusTime.labels(rig.name, rig.rigId).set(rig.statusTime)
-    rigJoinTime.labels(rig.name, rig.rigId).set(rig.joinTime)
-    rig.devices.forEach(device => {
-      deviceTemp.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.temperature)
-      deviceLoad.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.load)
-      devicePower.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.powerUsage)
-      deviceStatusInfo.labels(rig.name, device.name, device.id, device.deviceType.enumName, device.status.enumName).set(1)
-      device.speeds.forEach(speed => {
-        //console.log(speed)
-        deviceSpeed.labels(rig.name, device.name, device.id, device.deviceType.enumName, speed.algorithm, speed.displaySuffix).set(+speed.speed)
+    totalRigs.set(data.totalRigs)
+    totalDevices.set(data.totalDevices)
+    totalProfitability.set(data.totalProfitability)
+    unpaidAmount.set(+data.unpaidAmount)
+    Object.keys(data.minerStatuses).forEach(k => minerStatuses.labels(k).set(data.minerStatuses[k]))
+    Object.keys(data.devicesStatuses).forEach(k => devicesStatuses.labels(k).set(data.devicesStatuses[k]))
+    data.miningRigs.forEach(rig => {
+      rigStatusTime.labels(rig.name, rig.rigId).set(rig.statusTime)
+      try {
+        rigJoinTime.labels(rig.name, rig.rigId).set(rig.joinTime)
+      } catch (e) {}
+      rig.devices.forEach(device => {
+        try {
+          deviceTemp.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.temperature)
+          deviceLoad.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.load)
+          devicePower.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.powerUsage)
+          deviceStatusInfo.labels(rig.name, device.name, device.id, device.deviceType.enumName, device.status.enumName).set(1)
+          device.speeds.forEach(speed => {
+            //console.log(speed)
+            deviceSpeed.labels(rig.name, device.name, device.id, device.deviceType.enumName, speed.algorithm, speed.displaySuffix).set(+speed.speed)
+          })
+        } catch (e) {
+          console.log("there was an error parsing " + JSON.stringify(device) + " with ", e)
+        }
       })
     })
-  })
+  } catch (e) {
+    console.log("there was an error on request1 ", e)
+  }
 
-  const rawResponse2 = await nhClient.getWallet('BTC')
-  const data2 = rawResponse2.data
-  //console.log(data2)
-  totalBtc.set(+data2.totalBalance)
-  //fiatRate.set(data2.totalBalance)
+  try {
+    const rawResponse2 = await nhClient.getWallet('BTC')
+    const data2 = rawResponse2.data
+    //console.log(data2)
+    totalBtc.set(+data2.totalBalance)
+    //fiatRate.set(data2.totalBalance)
+  } catch (e) {
+    console.log("there was an error on request2 ", e)
+  }
 
-  const rawResponse3 = await nhClient.getExchangeRates()
-  const data3 = rawResponse3.data
-  //console.log(data3)
-  btcUsdRate.set(+data3['BTCUSDC'])
+  try {
+    const rawResponse3 = await nhClient.getExchangeRates()
+    const data3 = rawResponse3.data
+    //console.log(data3)
+    btcUsdRate.set(+data3['BTCUSDC'])
+  } catch (e) {
+    console.log("there was an error on request3 ", e)
+  }
 }
 
 
