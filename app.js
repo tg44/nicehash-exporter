@@ -56,6 +56,10 @@ const btcUsdRate = new Gauge({
   name: prefix +'btc_usd_rate',
   help: 'btcUsdRate',
 });
+const btcEurRate = new Gauge({
+  name: prefix +'btc_eur_rate',
+  help: 'btcEurRate',
+});
 const minerStatuses = new Gauge({
   name: prefix +'miner_statuses',
   help: 'minerStatuses',
@@ -162,8 +166,15 @@ async function refreshMetrics() {
   } catch (e) {
     console.log("there was an error on request3 ", e)
   }
+try {
+  const rawResponse4 = await nhClient.getExchangeRates()
+  const data4 = rawResponse4.data
+  //console.log(data4)
+  btcEurRate.set(+data4['BTCEURS'])
+} catch (e) {
+  console.log("there was an error on request4 ", e)
 }
-
+}
 
 // APIS
 
