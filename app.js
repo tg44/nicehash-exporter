@@ -11,6 +11,7 @@ const nodeMetricsPrefix = process.env.NODDE_METRICS_PREFIX || ''
 const prefix = process.env.NH_METRICS_PREFIX || 'nh_'
 const apiKey = process.env.NH_API_KEY
 const apiSecret = process.env.NH_API_SECRET
+const rates = process.env.NH_RATES ? process.env.NH_RATES.split(',') : ['BTCUSDC', 'BTCEURS']
 
 if(!apiKey || !apiSecret) {
   console.log("You need an api key and an api secret!")
@@ -52,13 +53,14 @@ const totalBtc = new Gauge({
   name: prefix +'total_btc',
   help: 'totalBtc',
 });
-const btcUsdRate = new Gauge({
-  name: prefix +'btc_usd_rate',
-  help: 'btcUsdRate',
-});
-const btcEurRate = new Gauge({
-  name: prefix +'btc_eur_rate',
-  help: 'btcEurRate',
+const rateGauges = rates.map(r => {
+  return {
+    rate: r,
+    gauge: new Gauge({
+      name: prefix + r.toLowerCase() + '_rate',
+      help: r + ' rate',
+    })
+  }
 });
 const minerStatuses = new Gauge({
   name: prefix +'miner_statuses',
@@ -129,7 +131,7 @@ async function refreshMetrics() {
       try {
         rigJoinTime.labels(rig.name, rig.rigId).set(rig.joinTime)
       } catch (e) {}
-      rig.devices.forEach(device => {
+      (rig.devices || []).forEach(device => {
         try {
           deviceTemp.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.temperature)
           deviceLoad.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.load)
@@ -162,8 +164,13 @@ async function refreshMetrics() {
     const rawResponse3 = await nhClient.getExchangeRates()
     const data3 = rawResponse3.data
     //console.log(data3)
-    btcUsdRate.set(+data3['BTCUSDC'])
-    btcEurRate.set(+data3['BTCEURS'])
+    rateGauges.forEach( r => {
+      try {
+        r.gauge.set(+data3[r.rate])
+      } catch (e) {
+        console.log(`given rate ${r.rate} not found in ${data3}`)
+      }
+    })
   } catch (e) {
     console.log("there was an error on request3 ", e)
   }

@@ -31,9 +31,14 @@ services:
       - REFRESH_RATE_SECONDS=30 #optionally you can override the api poll rate, default is 30
       - NODDE_METRICS_PREFIX=nh_ #optionally you can override the node system/app metrics prefix, default is empty
       - NH_METRICS_PREFIX=nh_ #optionally you can override the NH metrics prefix, default is nh_
+      - NH_RATES=BTCUSDC,BTCEURS #optionally you can override the exported rates in a comma separated list of rates
     ports:
       - 3000:3000
 ```
+
+## Breaking changes
+ - 2021.05.31.
+   - btc_usd_rate get renamed to btcusdc_rate due to the configurable rate list option
 
 ## Support
 
@@ -41,4 +46,4 @@ PRs are always welcome!
 
 ETH: `0x58f2198cda7d6cac855dd3fa29abe67e98adb2cd`
 
-But if you want to support my work in any way just send me an email ;) (You can find my email adress in the git commit history.)
+But, if you want to support my work in any way just send me an email ;) (You can find my email address in the git commit history.)
