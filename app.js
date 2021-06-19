@@ -2,6 +2,7 @@ const NicehashJS = require('./nicehash')
 const client = require('prom-client')
 const Gauge = client.Gauge
 const express = require('express')
+require('dotenv').config()
 
 // settings
 
@@ -11,10 +12,12 @@ const nodeMetricsPrefix = process.env.NODDE_METRICS_PREFIX || ''
 const prefix = process.env.NH_METRICS_PREFIX || 'nh_'
 const apiKey = process.env.NH_API_KEY
 const apiSecret = process.env.NH_API_SECRET
+const organizationId = process.env.NH_API_ORG_ID
 const rates = process.env.NH_RATES ? process.env.NH_RATES.split(',') : ['BTCUSDC', 'BTCEURS']
 
-if(!apiKey || !apiSecret) {
-  console.log("You need an api key and an api secret!")
+if(!apiKey || !apiSecret || !organizationId) {
+  console.log("You need an api key and an api secret and orgId!")
+  console.log("https://www.nicehash.com/my/settings/keys")
   return 1
 }
 
@@ -28,7 +31,8 @@ const register = client.register;
 
 const nhClient = new NicehashJS({
   apiKey,
-  apiSecret
+  apiSecret,
+  organizationId
 });
 
 // metrics

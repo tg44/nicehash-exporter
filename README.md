@@ -15,7 +15,7 @@ You can reach the metrics on `localhost:3000/metrics`.
 ### Docker and compose
 For docker you can run;
 ```
-docker run -e NH_API_KEY="key" -e NH_API_SECRET="secret" tg44/nicehash-exporter
+docker run -e NH_API_KEY="key" -e NH_API_SECRET="secret" -e NH_API_ORG_ID="orgId" tg44/nicehash-exporter
 ```
 For docker compose;
 ```
@@ -27,6 +27,7 @@ services:
     environment:
       - NH_API_KEY=key
       - NH_API_SECRET=secret
+      - NH_API_ORG_ID=orgId
       - PORT=3000 #optionally you can override the port inside for dev reasons, default is 3000
       - REFRESH_RATE_SECONDS=30 #optionally you can override the api poll rate, default is 30
       - NODDE_METRICS_PREFIX=nh_ #optionally you can override the node system/app metrics prefix, default is empty
@@ -37,6 +38,8 @@ services:
 ```
 
 ## Breaking changes
+ - 2021.06.19.
+   - due to changes on NH end, the orgId mandatory from now
  - 2021.05.31.
    - btc_usd_rate get renamed to btcusdc_rate due to the configurable rate list option
 

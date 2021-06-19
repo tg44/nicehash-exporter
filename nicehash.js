@@ -17,7 +17,7 @@ class NiceHashClient {
    * @param options Object
    * @param options.apiKey String - API Key
    * @param options.apiSecret String - API Secret
-   * @param options.orgsnizationId String - Organization Id
+   * @param options.organizationId String - Organization Id
    */
   constructor(options) {
     this.apiKey = options.apiKey;
@@ -80,6 +80,7 @@ class NiceHashClient {
       'X-Request-Id': ts,
       'X-Time': ts,
       'X-Nonce': nonce,
+      'X-Organization-ID': this.organizationId,
       'X-Auth': `${this.apiKey}:${this.hmacSha256BySegments(input)}`
     }
   }
