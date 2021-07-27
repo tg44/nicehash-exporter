@@ -1,4 +1,7 @@
-[![Docker Build Status](https://img.shields.io/docker/cloud/build/tg44/nicehash-exporter?style=flat-square)](https://hub.docker.com/r/tg44/nicehash-exporter)
+[![Build](https://img.shields.io/github/workflow/status/tg44/nicehash-exporter/ci)](https://github.com/tg44/nicehash-exporter/actions/workflows/build-and-publish.yaml)
+[![DockerImage](https://img.shields.io/badge/docker-latest-brightgreen?style=flat-square)](https://github.com/tg44/nicehash-exporter/pkgs/container/nicehash-exporter)
+[![Docker Hub](https://img.shields.io/badge/docker_hub-latest-brightgreen?style=flat-square)](https://hub.docker.com/r/tg44/nicehash-exporter)
+
 
 # NiceHash exporter
 
