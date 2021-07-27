@@ -155,10 +155,10 @@ async function refreshMetrics() {
   }
 
   try {
-    const rawResponse2 = await nhClient.getWallet('BTC')
+    const rawResponse2 = await nhClient.getWallets()
     const data2 = rawResponse2.data
     //console.log(data2)
-    totalBtc.set(+data2.totalBalance)
+    totalBtc.set(+data2.total.totalBalance)
     //fiatRate.set(data2.totalBalance)
   } catch (e) {
     console.log("there was an error on request2 ", e)

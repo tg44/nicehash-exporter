@@ -15,14 +15,14 @@ You can reach the metrics on `localhost:3000/metrics`.
 ### Docker and compose
 For docker you can run;
 ```
-docker run -e NH_API_KEY="key" -e NH_API_SECRET="secret" -e NH_API_ORG_ID="orgId" tg44/nicehash-exporter
+docker run -e NH_API_KEY="key" -e NH_API_SECRET="secret" -e NH_API_ORG_ID="orgId" ghcr.io/tg44/nicehash-exporter
 ```
 For docker compose;
 ```
 version: '3.1'
 services:
   nicehash-exporter:
-    image: tg44/nicehash-exporter
+    image: ghcr.io/tg44/nicehash-exporter
     restart: unless-stopped
     environment:
       - NH_API_KEY=key
@@ -38,6 +38,10 @@ services:
 ```
 
 ## Breaking changes
+ - 2021.07.27.
+   - nh_total_btc modified to actually show the total money in btc for the account and not only just the total btc amount
+   - we will permanently move away from dockerhub, the latest images will be pushed, but the documentation and the other infos will only be updated here
+     - DH freeze the free builds, while GH-Actions not only build free, but gives us public repositories too
  - 2021.06.19.
    - due to changes on NH end, the orgId mandatory from now
  - 2021.05.31.
