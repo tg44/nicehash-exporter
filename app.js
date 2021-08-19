@@ -116,9 +116,15 @@ const deviceStatusInfo = new Gauge({
 });
 
 async function refreshMetrics() {
-  deviceStatusInfo.reset()
   minerStatuses.reset()
   devicesStatuses.reset()
+  rigStatusTime.reset()
+  rigJoinTime.reset()
+  deviceTemp.reset()
+  deviceLoad.reset()
+  devicePower.reset()
+  deviceStatusInfo.reset()
+  deviceSpeed.reset()
   try {
     const rawResponse = await nhClient.getMiningRigs()
     const data = rawResponse.data
