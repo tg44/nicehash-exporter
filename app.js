@@ -112,7 +112,7 @@ const rigJoinTime = new Gauge({
 const deviceStatusInfo = new Gauge({
   name: prefix +'device_status_info',
   help: 'deviceStatusInfo',
-  labelNames: ['rig_name', 'device_name', 'device_id', 'device_type', 'status'],
+  labelNames: ['rig_name', 'rig_softwareversions', 'device_name', 'device_id', 'device_type', 'status'],
 });
 
 async function refreshMetrics() {
@@ -146,7 +146,7 @@ async function refreshMetrics() {
           deviceTemp.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.temperature)
           deviceLoad.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.load)
           devicePower.labels(rig.name, device.name, device.id, device.deviceType.enumName).set(device.powerUsage)
-          deviceStatusInfo.labels(rig.name, device.name, device.id, device.deviceType.enumName, device.status.enumName).set(1)
+          deviceStatusInfo.labels(rig.name, rig.softwareVersions, device.name, device.id, device.deviceType.enumName, device.status.enumName).set(1)
           device.speeds.forEach(speed => {
             //console.log(speed)
             deviceSpeed.labels(rig.name, device.name, device.id, device.deviceType.enumName, speed.algorithm, speed.displaySuffix).set(+speed.speed)
